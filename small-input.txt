@@ -1,25 +1,54 @@
-123
-asdad
-hola
-# coment
+# Variable and function definitions
+i, j, n: int;
+c: char;
 
-"""assasddddd """
+# Empty function
+def p(): { }
 
+def f(n: int,r: double): int {
+  	real: double;
+  	c1, c2: char;
+	c1 = (char)n;
+  	real = (double)c1 + (double)n + r;
+  	p(); # Invocation as a statement
+  	return (int)c1;
+}
 
-123454
-1
-0000
+# Variable definition
+d: double;
 
-'\n'
-'a'
-'\123'
+# Main function definition
+def main(): {
+	# Record
+  	pair: struct {
+    	integer: int;
+    	character: char;
+  	};
 
-12.3
-34.12E-3
-2.
-3e3
-.3
-3.e
-2.2e+1
+  	# Array
+  	vector: [10][5]int;
 
-#nnnnnnn
+  	i=0;
+  	j=0;
+  	while i<10 : {
+    	while j<5 : {
+      		vector[i][j] = i + j;
+      		j=j+1;
+		}
+		i=i+1;
+  	}
+
+  	i=0;
+	pair.character = '0';
+  	pair.integer = 48;
+  	while pair.integer >= i: {
+    	if pair.integer == vector[0][0] || !(int)pair.character || i%2==0:
+      		print 't', 'r', 'u', 'e', '\n';
+    	else
+      		print 'f', 'a', 'l', 's', 'e', '\n';
+    	i=i+1;
+  	}
+  	print f(i, (double)i); # Invocation as an expression
+  	vector[9][(int)4.3] = 5;
+  	f(1, 2.2); # Invocation as a statement
+}
