@@ -1,5 +1,7 @@
 package ast.Types;
 
+import visitor.Visitor;
+
 public class RecordField extends AbstractType {
 
     private String name;
@@ -33,4 +35,9 @@ public class RecordField extends AbstractType {
         this.type = type;
     }
 
+
+    @Override
+    public <TP,TR>TR accept(Visitor<TP,TR> v, TP p) {
+        return v.visit(this,p);
+    }
 }

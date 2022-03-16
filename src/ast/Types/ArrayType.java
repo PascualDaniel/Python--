@@ -1,19 +1,21 @@
 package ast.Types;
 
+import visitor.Visitor;
+
 import java.util.List;
 
 public class ArrayType extends AbstractType{
 
     private Type type;
-    private List<Integer> dimensions;
+    private int dimension;
     public ArrayType(int line, int column) {
         super(0, 0);
     }
 
-    public ArrayType( Type type, List<Integer>  dimensions) {
+    public ArrayType( Type type, int  dimensions) {
         super(0, 0);
         this.type = type;
-        this.dimensions = dimensions;
+        this.dimension = dimension;
     }
 
     public Type of() {
@@ -24,12 +26,21 @@ public class ArrayType extends AbstractType{
         this.type = type;
     }
 
-    public List<Integer>  getDimensions() {
-        return dimensions;
+    public Type getType() {
+        return type;
     }
 
-    public void setDimensions(List dimensions) {
-        this.dimensions = dimensions;
+    public int getDimension() {
+        return dimension;
+    }
+
+    public void setDimension(int dimension) {
+        this.dimension = dimension;
+    }
+
+    @Override
+    public <TP,TR>TR accept(Visitor<TP,TR> v, TP p) {
+        return v.visit(this,p);
     }
 
 }

@@ -1,6 +1,7 @@
 package ast.Statements;
 
 import ast.Expressions.Expression;
+import visitor.Visitor;
 
 import java.util.List;
 
@@ -25,4 +26,22 @@ public class If extends AbstractStatement {
         this.statementList = statementList;
         this.statementListElse = statementListElse;
     }
+
+    public Expression getExpression() {
+        return expression;
+    }
+
+    public List<Statement> getStatementList() {
+        return statementList;
+    }
+
+    public List<Statement> getStatementListElse() {
+        return statementListElse;
+    }
+
+    @Override
+    public <TP,TR>TR accept(Visitor<TP,TR> v, TP p) {
+        return v.visit(this,p);
+    }
+
 }

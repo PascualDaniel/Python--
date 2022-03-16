@@ -2,6 +2,7 @@ package ast.Definitions;
 
 import ast.Statements.Statement;
 import ast.Types.Type;
+import visitor.Visitor;
 
 import java.util.List;
 
@@ -27,5 +28,22 @@ public class FunctionDefinition extends  AbstractDefinition{
 
     public List<Definition> getVarDefinitions() {
         return definitions;
+    }
+
+    public List<Definition> getDefinitions() {
+        return definitions;
+    }
+
+    public void setDefinitions(List<Definition> definitions) {
+        this.definitions = definitions;
+    }
+
+    public void setStatements(List<Statement> statements) {
+        this.statements = statements;
+    }
+
+    @Override
+    public <TP,TR>TR accept(Visitor<TP,TR> v, TP p) {
+        return v.visit(this,p);
     }
 }

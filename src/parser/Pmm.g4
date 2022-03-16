@@ -47,7 +47,8 @@ function_definition returns  [Definition ast]:  'def' id1=ID '('
 
 
 main returns [Definition ast]:'def''main''('')'':' '{'
-                                        {List<Definition> definiciones= new LinkedList<Definition>();}
+                                        {List<Definition> definiciones= new LinkedList<Definition>();
+                                        }
                                         (var1  = variable_definition    {definiciones.addAll($var1.ast  );})*
                                         {List<Statement> sentencias = new LinkedList<Statement>();}
                                         ( statement  {sentencias.add($statement.ast);} )*
@@ -63,10 +64,19 @@ main returns [Definition ast]:'def''main''('')'':' '{'
                                                     );}
                                         '}' EOF ;
 //--------Variable definition------------------------------------------------------------------
-
+//Todo esta wea
 variable_definition returns [List<Definition> ast]: {$ast = new ArrayList<Definition>();}
-    id1=ID(','id2= ID {$ast.add(new VarDefinition($id2.getLine(),$id2.getCharPositionInLine()+1,$id2.text,null)); })*
-    ':'type';' {$ast.add(new VarDefinition($id1.getLine(),$id1.getCharPositionInLine()+1,$id1.text,null)); }
+    {List<String> ids = new ArrayList<String>();}
+    id1=ID{ids.add($id1.text);}
+    (','id2= ID {if(ids.contains($id2.text))
+                    new ErrorType($id2.getLine(),$id2.getCharPositionInLine()+1,"Variable Repetida");
+                 else
+                    ids.add($id2.text);
+                 }
+    {$ast.add(new VarDefinition($id2.getLine(),$id2.getCharPositionInLine()+1,$id2.text,null));
+      })*
+
+    ':'type';' {$ast.add(new VarDefinition($id1.getLine(),$id1.getCharPositionInLine()+1,$id1.text,null));}
    {for(Definition d :$ast){
    d.setType($type.ast);
    }}
@@ -162,6 +172,8 @@ expression returns [Expression ast]:
                         {$ast = new Cast($CAST.getLine(),$CAST.getCharPositionInLine()+1,$t.ast,$ex.ast );}
         |NOT='!'op =  expression
                         {$ast = new Not($NOT.getLine(),$NOT.getCharPositionInLine()+1,$op.ast );}
+        |MINUS='-'op =  expression
+                       {$ast = new UnaryMinus($MINUS.getLine(),$MINUS.getCharPositionInLine()+1,$op.ast );}
         |op1 = expression OP=('*'|'/'|'%') op2 = expression
                         {$ast = new Arithmetic(
                         $op1.ast.getLine(),
@@ -211,16 +223,28 @@ simple_type returns [Type ast]:
             |'char'     {$ast = new CharType();}
 
 ;
+//TODO
+//CAmbair structs con las posicciones de la lista
 type returns[Type ast]:
             |simple_type  {$ast = $simple_type.ast;}
             |'struct''{'{List<RecordField> fields = new LinkedList<RecordField>();}
-            (id1=ID (','id2=ID{fields.add(new RecordField($id2.getLine(),$id2.getCharPositionInLine()+1,$id2.text,$simple_type.ast)); })*
-            ':' simple_type';'{fields.add(new RecordField($id1.getLine(),$id1.getCharPositionInLine()+1,$id1.text,$simple_type.ast)); })+
+            {List<String> ids = new ArrayList<String>();}
+            (id1=ID{
+            if(ids.contains($id1.text))
+                new ErrorType($id1.getLine(),$id1.getCharPositionInLine()+1,"Variable Repetida");
+            ids.add($id1.text);}
+            (','id2=ID{
+            if(ids.contains($id2.text))
+               new ErrorType($id2.getLine(),$id2.getCharPositionInLine()+1,"Variable Repetida");
+            ids.add($id2.text);})*
+            ':' simple_type';')+
+            {for(String id: ids)
+               fields.add(new RecordField($id1.getLine(),$id1.getCharPositionInLine()+1,id,$simple_type.ast)); }
             '}'
             {$ast = new RecordType(fields);}
-            |{List<Integer> dimensions = new ArrayList<Integer>();}
-            ('['INT_CONSTANT{dimensions.add(LexerHelper.lexemeToInt($INT_CONSTANT.text));}']')+simple_type
-            {$ast = new ArrayType($simple_type.ast,dimensions);}
+            |
+            '['INT_CONSTANT']'type
+            {$ast = new ArrayType($type.ast,LexerHelper.lexemeToInt($INT_CONSTANT.text));}
             ;
 //cambiar uml de arraytype, lista de dimensioness
 //=============================================================================================

@@ -1,9 +1,9 @@
-import ast.ASTNode;
 import parser.*;
 
 import org.antlr.v4.runtime.*;
 
 import ast.Program;
+import errorhandler.EH;
 import introspector.model.IntrospectorModel;
 import introspector.view.IntrospectorTree;
 
@@ -22,10 +22,19 @@ public class Main {
 		// create a parser that feeds off the tokens buffer
 		CommonTokenStream tokens = new CommonTokenStream(lexer); 
 		PmmParser parser = new PmmParser(tokens);	
-		ASTNode ast = (ASTNode) parser.program().ast;
-		
-		// * The AST is shown
-		IntrospectorModel model=new IntrospectorModel("Program", ast);
-		new IntrospectorTree("Introspector", model);
+		Program ast = parser.program().ast;
+
+		// * Check errors 
+		if(EH.getEH().hasErrors()){
+			// * Show errors
+
+			EH.getEH().showErrors(System.err);
+
+		}
+		else{			
+			// * The AST is shown
+			IntrospectorModel model=new IntrospectorModel("Program", ast);
+			new IntrospectorTree("Introspector", model);
+		}		
 	}
 }
