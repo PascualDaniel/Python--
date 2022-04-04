@@ -8,6 +8,7 @@ public class AbstractDefinition extends AbstractASTNode implements Definition {
 
     private String name;
     private Type type;
+    private int scope;
 
     public AbstractDefinition(int line, int column,String name,Type type) {
         super(line, column);
@@ -27,6 +28,16 @@ public class AbstractDefinition extends AbstractASTNode implements Definition {
 
     public void setType(Type type) {
         this.type=type;
+    }
+
+    @Override
+    public int getScope() {
+        return scope;
+    }
+
+    @Override
+    public void setScope(int scope) {
+        this.scope=scope;
     }
 
     @Override

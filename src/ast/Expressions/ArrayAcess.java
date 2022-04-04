@@ -9,6 +9,7 @@ public class ArrayAcess extends AbstractExpression{
         super(line, column);
         this.left=left;
         this.rigth = rigth;
+        setLValue(true);
     }
 
     public Expression getLeft() {

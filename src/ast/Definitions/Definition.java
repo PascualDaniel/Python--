@@ -8,4 +8,7 @@ public interface Definition extends ASTNode {
     public Type getType();
 
     void setType(Type ast);
+
+    public int getScope();
+    public void setScope(int scope);
 }

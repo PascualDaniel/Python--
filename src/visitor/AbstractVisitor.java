@@ -8,9 +8,10 @@ import ast.Program;
 import ast.Statements.*;
 import ast.Types.*;
 
-public abstract class AbstractVisitor implements Visitor{
+public abstract class AbstractVisitor<TP,TR> implements Visitor<TP,TR>{
     @Override
-    public Object visit(FunctionDefinition node, Object p) {
+    public TR visit(FunctionDefinition node, TP p) {
+        node.getType().accept(this,p);
         for (Definition definition:node.getDefinitions()) {
                 definition.accept(this,p);
         }
@@ -22,57 +23,58 @@ public abstract class AbstractVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(VarDefinition node, Object p) {
+    public TR visit(VarDefinition node, TP p) {
         node.getType().accept(this,p);
         return null;
     }
 
     @Override
-    public Object visit(Arithmetic node, Object p) {
+    public TR visit(Arithmetic node, TP p) {
         node.getLeft().accept(this,p);
         node.getRigth().accept(this,p);
         return null;
     }
 
     @Override
-    public Object visit(ArrayAcess node, Object p) {
+    public TR visit(ArrayAcess node, TP p) {
         node.getLeft().accept(this,p);
         node.getRigth().accept(this,p);
         return null;
     }
 
     @Override
-    public Object visit(Cast node, Object p) {
+    public TR visit(Cast node, TP p) {
         node.getTypeCast().accept(this,p);
         node.getExpression().accept(this,p);
         return null;
     }
 
     @Override
-    public Object visit(CharLiteral node, Object p) {
+    public TR visit(CharLiteral node, TP p) {
 
         return null;
     }
 
     @Override
-    public Object visit(Comparason node, Object p) {
+    public TR visit(Comparason node, TP p) {
         node.getLeft().accept(this,p);
         node.getRigth().accept(this,p);
         return null;
     }
 
     @Override
-    public Object visit(DoubleLiteral node, Object p) {
+    public TR visit(DoubleLiteral node, TP p) {
         return null;
     }
 
     @Override
-    public Object visit(FieldAccess node, Object p) {
+    public TR visit(FieldAccess node, TP p) {
+        node.getType().accept(this,p);
         return null;
     }
 
     @Override
-    public Object visit(FunctionInvocation node, Object p) {
+    public TR visit(FunctionInvocation node, TP p) {
 
         node.getVariable().accept(this,p);
         for (Expression expression:node.getExpressionList()) {
@@ -82,12 +84,12 @@ public abstract class AbstractVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(IntLiteral node, Object p) {
+    public TR visit(IntLiteral node, TP p) {
         return null;
     }
 
     @Override
-    public Object visit(Logical node, Object p) {
+    public TR visit(Logical node, TP p) {
         node.getLeft().accept(this,p);
         node.getRigth().accept(this,p);
 
@@ -95,27 +97,27 @@ public abstract class AbstractVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(Not node, Object p) {
+    public TR visit(Not node, TP p) {
         node.getExpression().accept(this,p);
         return null;
     }
 
     @Override
-    public Object visit(UnaryMinus node, Object p) {
+    public TR visit(UnaryMinus node, TP p) {
         node.getExpression().accept(this,p);
 
         return null;
     }
 
     @Override
-    public Object visit(Variable node, Object p) {
+    public TR visit(Variable node, TP p) {
 
 
         return null;
     }
 
     @Override
-    public Object visit(Assigment node, Object p) {
+    public TR visit(Assigment node, TP p) {
         node.getLeft().accept(this,p);
         node.getRight().accept(this,p);
 
@@ -123,7 +125,7 @@ public abstract class AbstractVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(If node, Object p) {
+    public TR visit(If node, TP p) {
         node.getExpression().accept(this,p);
         for (Statement statement:node.getStatementList()) {
             statement.accept(this,p);
@@ -136,7 +138,7 @@ public abstract class AbstractVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(Input node, Object p) {
+    public TR visit(Input node, TP p) {
         for (Expression expression:node.getExpressionList()) {
             expression.accept(this,p);
         }
@@ -144,7 +146,7 @@ public abstract class AbstractVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(Print node, Object p) {
+    public TR visit(Print node, TP p) {
         for (Expression expression:node.getExpressionList()) {
             expression.accept(this,p);
         }
@@ -152,7 +154,7 @@ public abstract class AbstractVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(Procediment node, Object p) {
+    public TR visit(Procediment node, TP p) {
         node.getVariable().accept(this,p);
         for (Expression expression:node.getExpressions()) {
             expression.accept(this,p);
@@ -162,13 +164,13 @@ public abstract class AbstractVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(Return node, Object p) {
+    public TR visit(Return node, TP p) {
         node.getExpression().accept(this,p);
         return null;
     }
 
     @Override
-    public Object visit(While node, Object p) {
+    public TR visit(While node, TP p) {
         node.getExpression().accept(this,p);
         for (Statement statement:node.getStatementList()) {
             statement.accept(this,p);
@@ -177,24 +179,24 @@ public abstract class AbstractVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(ArrayType node, Object p) {
+    public TR visit(ArrayType node, TP p) {
         node.getType().accept(this,p);
 
         return null;
     }
 
     @Override
-    public Object visit(CharType node, Object p) {
+    public TR visit(CharType node, TP p) {
         return null;
     }
 
     @Override
-    public Object visit(DoubleType node, Object p) {
+    public TR visit(DoubleType node, TP p) {
         return null;
     }
 
     @Override
-    public Object visit(FunctionType node, Object p) {
+    public TR visit(FunctionType node, TP p) {
         node.getType().accept(this,p);
         for (Definition definition:node.getDefinitions()) {
             definition.accept(this,p);
@@ -203,17 +205,17 @@ public abstract class AbstractVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(IntType node, Object p) {
+    public TR visit(IntType node, TP p) {
         return null;
     }
 
     @Override
-    public Object visit(RecordField node, Object p) {
+    public TR visit(RecordField node, TP p) {
         return null;
     }
 
     @Override
-    public Object visit(RecordType node, Object p) {
+    public TR visit(RecordType node, TP p) {
         for (RecordField field:node.getFields()) {
             field.accept(this,p);
         }
@@ -222,12 +224,12 @@ public abstract class AbstractVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(VoidType node, Object p) {
+    public TR visit(VoidType node, TP p) {
         return null;
     }
 
     @Override
-    public Object visit(Program node, Object p) {
+    public TR visit(Program node, TP p) {
         for (Definition definition:node.getDefinitions()) {
             definition.accept(this,p);
         }

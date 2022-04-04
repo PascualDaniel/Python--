@@ -4,10 +4,11 @@ import ast.Expressions.Expression;
 import ast.Expressions.Variable;
 import visitor.Visitor;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Procediment extends AbstractStatement {
-    private List<Expression> expressions;
+    private List<Expression> expressions = new LinkedList<>();
     private Variable variable;
 
     public Procediment(int line, int column) {

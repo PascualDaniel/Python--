@@ -37,6 +37,8 @@ public class FunctionType extends AbstractType{
         this.definitions = definitions;
     }
 
+
+
     @Override
     public <TP,TR>TR accept(Visitor<TP,TR> v, TP p) {
         return v.visit(this,p);
