@@ -1,15 +1,28 @@
-def f(e:int):double {
-  return (double)e;
-}
+c: char;
+i: int;
+r: double;
 
-# Main program
 def main(): {
-  i,a,j:int;
-  v:[10]double;
-  
-  a = 0;
-  i = 0;
-  j = -i*a-2;  
-  v[(int)(v[j])] = (double)a;
-  print 'f', '(', 'i', ')', '=' ,f(i);
+	a, i:int;
+
+	c='a';
+	print c,'\n';
+
+	a=1;
+	i=(int)'0'*3;
+	print a, ' ', i, '\n';
+
+	input r;
+	print (double)2*r, '\n';
+
+	print (double)3-4.5, ' ',
+            (double)'0'/48.0, ' ',
+            (int)'0'%(int)'1', ' ',
+            0+(int)'1', '\n';
+	print 1<2, ' ',
+	      4>=3, ' ',
+	      5==5, ' ',
+	      1&&2, ' ',
+	      0||3, ' ',
+	      !0, '\n';
 }

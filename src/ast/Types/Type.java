@@ -20,6 +20,10 @@ public interface Type extends ASTNode {
     public Type parentherisis(List<Expression> expressions, ASTNode node);
     public boolean isBuildingType();
 
+    public int getMemoryBytes();
+
+    public char suffix();
+
 
 
 }

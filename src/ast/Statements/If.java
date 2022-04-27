@@ -3,6 +3,7 @@ package ast.Statements;
 import ast.Expressions.Expression;
 import visitor.Visitor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class If extends AbstractStatement {
@@ -18,6 +19,7 @@ public class If extends AbstractStatement {
         super(line, column);
         this.expression = expression;
         this.statementList = statementList;
+        this.statementListElse = new ArrayList<Statement>();
     }
 
     public If(int line, int column, Expression expression, List<Statement> statementList, List<Statement> statementListElse) {

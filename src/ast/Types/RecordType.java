@@ -1,5 +1,6 @@
 package ast.Types;
 
+import ast.ASTNode;
 import visitor.Visitor;
 
 import java.util.List;
@@ -26,7 +27,27 @@ public class RecordType extends AbstractType{
     }
 
     @Override
+    public Type dot(String other, ASTNode node)  {
+        for (RecordField field: fields)
+            if (field.getName().equals(other))
+                return field.getType();
+        return super.dot(other,node);
+    }
+
+    @Override
     public <TP,TR>TR accept(Visitor<TP,TR> v, TP p) {
         return v.visit(this,p);
     }
+
+    @Override
+    public int getMemoryBytes() {
+        int ret = 0;
+
+        for(RecordField rf: this.fields){
+            ret += rf.getType().getMemoryBytes();
+        }
+
+        return ret;
+    }
+    
 }

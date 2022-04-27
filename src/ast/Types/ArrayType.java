@@ -1,5 +1,6 @@
 package ast.Types;
 
+import ast.ASTNode;
 import visitor.Visitor;
 
 import java.util.List;
@@ -39,8 +40,23 @@ public class ArrayType extends AbstractType{
     }
 
     @Override
+    public Type squareBrakets(Type other, ASTNode node) {
+        if(other instanceof  ErrorType)
+            return other;
+        if(other instanceof IntType)
+            return getType();
+
+        return super.squareBrakets(other,node);
+    }
+
+    @Override
     public <TP,TR>TR accept(Visitor<TP,TR> v, TP p) {
         return v.visit(this,p);
+    }
+
+    @Override
+    public int getMemoryBytes() {
+        return dimension*type.getMemoryBytes();
     }
 
 }

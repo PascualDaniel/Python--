@@ -1,3 +1,7 @@
+import codegenerator.CodeGenerator;
+import codegenerator.ExecuteCGVisitor;
+import codegenerator.ExecutionCGVisitor;
+import codegenerator.OffsetVisitor;
 import parser.*;
 
 import org.antlr.v4.runtime.*;
@@ -37,10 +41,13 @@ public class Main {
 			EH.getEH().showErrors(System.err);
 
 		}
-		else{			
+		else{
+			ast.accept(new OffsetVisitor<>(),null);
+			CodeGenerator cg = new CodeGenerator(args[1],args[0]);
+			ast.accept(new ExecuteCGVisitor(cg),null);
 			// * The AST is shown
-			IntrospectorModel model=new IntrospectorModel("Program", ast);
-			new IntrospectorTree("Introspector", model);
+		//	IntrospectorModel model=new IntrospectorModel("Program", ast);
+		//	new IntrospectorTree("Introspector", model);
 		}		
 	}
 }

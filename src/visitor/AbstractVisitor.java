@@ -69,7 +69,7 @@ public abstract class AbstractVisitor<TP,TR> implements Visitor<TP,TR>{
 
     @Override
     public TR visit(FieldAccess node, TP p) {
-        node.getType().accept(this,p);
+        node.getExpression().accept(this,p);
         return null;
     }
 

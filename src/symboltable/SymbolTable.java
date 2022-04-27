@@ -25,6 +25,7 @@ public class SymbolTable {
 	
 	public boolean insert(Definition definition) {
 		if(findInCurrentScope(definition.getName())==null) {
+			definition.setScope(scope);
 			table.get(scope).put(definition.getName(), definition);
 			return  true;
 		}

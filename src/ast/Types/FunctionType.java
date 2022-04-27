@@ -1,6 +1,8 @@
 package ast.Types;
 
+import ast.ASTNode;
 import ast.Definitions.VarDefinition;
+import ast.Expressions.Expression;
 import visitor.Visitor;
 
 import java.util.List;
@@ -37,6 +39,25 @@ public class FunctionType extends AbstractType{
         this.definitions = definitions;
     }
 
+
+
+    @Override
+    public Type parentherisis(List<Expression> expressions, ASTNode node) {
+        if(expressions.size() != definitions.size()){
+            return super.parentherisis(expressions,node);
+        }
+        for(int i=0; i < expressions.size(); i++){
+            Type type = expressions.get(i).getType().promotesTo(definitions.get(i).getType(),node);
+            if( type instanceof ErrorType){
+                return type;
+            }
+        }
+        return type;
+    }
+    @Override
+    public Type promotesTo(Type other, ASTNode node) {
+        return getType().promotesTo(other,node);
+    }
 
 
     @Override

@@ -111,9 +111,9 @@ statement returns [Statement ast ]:
         |ID'('')'';'
                     {$ast = new Procediment($ID.getLine(),$ID.getCharPositionInLine()+1,
                      new Variable($ID.getLine(),$ID.getCharPositionInLine()+1,$ID.text));}
-        |ID'(' exs=expressions')'';'
+        |ID'(' { List<Expression> expresions = new LinkedList<Expression>();} (exs =expressions {expresions = $exs.ast;})?')'';'
                      {$ast = new Procediment($ID.getLine(),$ID.getCharPositionInLine()+1,
-                     $exs.ast,
+                     expresions,
                      new Variable($ID.getLine(),$ID.getCharPositionInLine()+1,$ID.text));}
         |IF='if'ex=expression':'(st1=if_statements)
                      {$ast = new If($IF.getLine(),$IF.getCharPositionInLine()+1,$ex.ast,$st1.ast);}
@@ -149,15 +149,15 @@ expression returns [Expression ast]:
                                   ,LexerHelper.lexemeToInt($INT_CONSTANT.text ));}
         |REAL_CONSTANT  {$ast = new DoubleLiteral($REAL_CONSTANT.getLine(),$REAL_CONSTANT.getCharPositionInLine()+1
                                   ,LexerHelper.lexemeToReal($REAL_CONSTANT.text ));}
-        |CHAR_CONSTANT  {$ast = new IntLiteral($CHAR_CONSTANT.getLine(),$CHAR_CONSTANT.getCharPositionInLine()+1
+        |CHAR_CONSTANT  {$ast = new CharLiteral($CHAR_CONSTANT.getLine(),$CHAR_CONSTANT.getCharPositionInLine()+1
                                   ,LexerHelper.lexemeToChar($CHAR_CONSTANT.text ));}
         |'('ex= expression')'
                         {$ast = $ex.ast;}
-        |ID'('exs =expressions')'
+        |ID'('{ List<Expression> expresions = new LinkedList<Expression>();} (exs =expressions {expresions = $exs.ast;})?')'
                         {
                         $ast = new FunctionInvocation(
                         $ID.getLine(),$ID.getCharPositionInLine()+1,
-                                                                                           $exs.ast,
+                                                                                           expresions,
                         new Variable($ID.getLine(),$ID.getCharPositionInLine()+1,$ID.text)
                         );}
         |op1 = expression'[' op2 =expression']'
@@ -167,7 +167,7 @@ expression returns [Expression ast]:
                          $op1.ast,$op2.ast
                          );}
         |ex= expression'.'ID
-                        {$ast = new FieldAccess($ex.ast.getLine(),$ex.ast.getColumn()+1,$ID.text );}
+                        {$ast = new FieldAccess($ex.ast.getLine(),$ex.ast.getColumn()+1,$ex.ast ,$ID.text );}
         |CAST='('t=type')' ex=expression
                         {$ast = new Cast($CAST.getLine(),$CAST.getCharPositionInLine()+1,$t.ast,$ex.ast );}
         |NOT='!'op =  expression
@@ -223,13 +223,14 @@ simple_type returns [Type ast]:
             |'char'     {$ast = new CharType();}
 
 ;
-//TODO
-//CAmbair structs con las posicciones de la lista
+
 type returns[Type ast]:
             |simple_type  {$ast = $simple_type.ast;}
             |'struct''{'{List<RecordField> fields = new LinkedList<RecordField>();}
+
+            (
             {List<String> ids = new ArrayList<String>();}
-            (id1=ID{
+            id1=ID{
             if(ids.contains($id1.text))
                 new ErrorType($id1.getLine(),$id1.getCharPositionInLine()+1,"Variable Repetida");
             ids.add($id1.text);}
@@ -237,9 +238,12 @@ type returns[Type ast]:
             if(ids.contains($id2.text))
                new ErrorType($id2.getLine(),$id2.getCharPositionInLine()+1,"Variable Repetida");
             ids.add($id2.text);})*
-            ':' simple_type';')+
+            ':' simple_type';'
             {for(String id: ids)
                fields.add(new RecordField($id1.getLine(),$id1.getCharPositionInLine()+1,id,$simple_type.ast)); }
+            { ids = new ArrayList<String>();}
+            )+
+
             '}'
             {$ast = new RecordType(fields);}
             |

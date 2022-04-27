@@ -10,6 +10,9 @@ public class AbstractDefinition extends AbstractASTNode implements Definition {
     private Type type;
     private int scope;
 
+    private int offset;
+
+
     public AbstractDefinition(int line, int column,String name,Type type) {
         super(line, column);
         this.name= name;
@@ -43,5 +46,13 @@ public class AbstractDefinition extends AbstractASTNode implements Definition {
     @Override
     public <TP, TR> TR accept(Visitor<TP, TR> v, TP p) {
         return null;
+    }
+    @Override
+    public int getOffset() {
+        return offset;
+    }
+    @Override
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 }

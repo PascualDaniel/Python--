@@ -19,10 +19,9 @@ public class IdentificationVisitor<TP, TR> extends AbstractVisitor<TP, TR> {
 
     @Override
     public TR visit(VarDefinition node, TP p) {
-        node.getType().accept(this,p);
-
         if(!table.insert(node) )
             new ErrorType(node.getLine(), node.getColumn(), "Variable ya definida");
+        node.getType().accept(this,p);
         return null;
     }
     @Override
@@ -40,6 +39,8 @@ public class IdentificationVisitor<TP, TR> extends AbstractVisitor<TP, TR> {
 
     @Override
     public TR visit(FunctionDefinition node, TP p) {
+        if(!table.insert(node) )
+            new ErrorType(node.getLine(), node.getColumn(), "Function "+node.getName()+" ya definida");
         table.set();
         node.getType().accept(this,p);
         for (Definition definition:node.getDefinitions()) {
@@ -49,8 +50,7 @@ public class IdentificationVisitor<TP, TR> extends AbstractVisitor<TP, TR> {
             statement.accept(this,p);
         }
         table.reset();
-        if(!table.insert(node) )
-            new ErrorType(node.getLine(), node.getColumn(), "Function ya definida");
+
         return null;
     }
 
