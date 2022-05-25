@@ -16,13 +16,13 @@ public class OffsetVisitor <TP, TR> extends AbstractVisitor<TP, TR> {
 
     @Override
     public TR visit(FunctionDefinition node, TP p){
-
+        locales = 0;
         node.getType().accept(this, p);
         for (Definition definition:node.getDefinitions()) {
             definition.accept(this,p);
         }
 
-        locales = 0;
+
         return null;
     }
 
@@ -53,7 +53,7 @@ public class OffsetVisitor <TP, TR> extends AbstractVisitor<TP, TR> {
             node.getDefinitions().get(i).setOffset(bites);
             bites += node.getDefinitions().get(i).getType().getMemoryBytes();
         }
-
+        node.getType().accept(this,p);
         return null;
     }
 

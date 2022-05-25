@@ -6,12 +6,16 @@ import ast.Definitions.VarDefinition;
 import ast.Expressions.*;
 import ast.Program;
 import ast.Statements.*;
+import ast.Types.FunctionType;
+import ast.Types.VoidType;
 
-public class ExecuteCGVisitor  <TP, TR> extends AbstractErrorVisitor<TP, TR>{
+import javax.swing.plaf.nimbus.State;
+
+public class ExecuteCGVisitor  extends AbstractErrorVisitor<FunctionDefinition, Void>{
 
 
-    private AddressCGVisitor<TP,TR> addressCGVisitor;
-    private ValueCGVisitor<TP,TR> valueCGVisitor;
+    private AddressCGVisitor addressCGVisitor;
+    private ValueCGVisitor valueCGVisitor;
 
     private CodeGenerator codeGenerator;
 
@@ -30,13 +34,14 @@ public class ExecuteCGVisitor  <TP, TR> extends AbstractErrorVisitor<TP, TR>{
      *
      */
     @Override
-    public TR visit(Program node, TP p) {
+    public Void visit(Program node, FunctionDefinition p) {
         codeGenerator.main();
-        //codeGenerator.halt();
+        codeGenerator.halt();
         for (Definition def:node.getDefinitions()) {
-            def.accept(this, p);
-        //    codeGenerator.enter(def.getOffset());
+            def.accept(this, null);
+            codeGenerator.enter(def.getOffset());
         }
+        //codeGenerator.halt();
         return null;
     }
 
@@ -45,18 +50,49 @@ public class ExecuteCGVisitor  <TP, TR> extends AbstractErrorVisitor<TP, TR>{
      *
      */
     @Override
-    public TR visit(VarDefinition node, TP p) {
-        //node.
+    public Void visit(VarDefinition node, FunctionDefinition p) {
+
         return null;
     }
 
+
     /**
-     * Execute[[VarDefinition:Definition -> type ID]]()
-     *
+     * execute[[FuncDefinition: statement ->ID functType:type definitions* statements*]]() =
+     *          ID <:>
+     *          for (Def def: type.getDefinitions())
+     *             execute[[def]]()
+     *             <enter> type.getMemoryBytes()
+     *          for (Def d: definitions)
+     *              execute[[def]]()
+     *          for(Statement state: statements)
+     *             execute[[state]]
+     *          if (funcDefinition.getType() == VoidType)
+     *              <ret> (0, functionType.getBytesLocal(), functionType.getBytesParam())
      */
     @Override
-    public TR visit(FunctionDefinition node, TP p) {
-        //node.
+    public Void visit(FunctionDefinition node, FunctionDefinition p) {
+        codeGenerator.funcDef(node.getName());
+        FunctionType type = (FunctionType) node.getType();
+        for (Definition def:type.getDefinitions()) {
+            def.accept(this,null);
+        }
+        codeGenerator.enter(type.getMemoryBytes());
+        for (Definition def:node.getDefinitions()) {
+            def.accept(this,null);
+        }
+        for (Statement st:node.getStatements()) {
+            st.accept(this,null);
+        }
+
+        if (!(node.getType() instanceof VoidType))
+            codeGenerator.ret(
+                    0,
+                    p.getLocalVarBytes(),
+                    p.getType().getMemoryBytes()
+            );
+
+
+
         return null;
     }
 
@@ -73,7 +109,7 @@ public class ExecuteCGVisitor  <TP, TR> extends AbstractErrorVisitor<TP, TR>{
      *
      */
     @Override
-    public TR visit(Variable node, TP p) {
+    public Void visit(Variable node, FunctionDefinition p) {
         if(node.getDefinition().getScope()==0){
             codeGenerator.pushA(node.getDefinition().getOffset());
         }else{
@@ -84,6 +120,19 @@ public class ExecuteCGVisitor  <TP, TR> extends AbstractErrorVisitor<TP, TR>{
         return null;
     }
 
+    /**
+     * Execute[[Assigment: statement -> expression1 expression2]]()
+     *  dirección⟦left⟧
+     *  valor⟦right⟧
+     *  STORE
+     *
+     */
+    public Void visit(Assigment node, FunctionDefinition p){
+        node.getLeft().accept(addressCGVisitor,null);
+        node.getRight().accept(valueCGVisitor,null);
+        codeGenerator.store(node.getLeft().getType().suffix());
+        return null;
+    }
 
     /**
      * Execute[[Print: statement -> expression]]()=
@@ -98,9 +147,9 @@ public class ExecuteCGVisitor  <TP, TR> extends AbstractErrorVisitor<TP, TR>{
      *      }
      */
     @Override
-    public TR visit(Print node, TP p) {
+    public Void visit(Print node, FunctionDefinition p) {
         for (Expression expression:node.getExpressionList()) {
-            expression.accept(valueCGVisitor, p);
+            expression.accept(valueCGVisitor, null);
             codeGenerator.out(expression.getType().suffix());
         }
         return null;
@@ -122,9 +171,9 @@ public class ExecuteCGVisitor  <TP, TR> extends AbstractErrorVisitor<TP, TR>{
      *        }
      */
     @Override
-    public TR visit(Input node, TP p) {
+    public Void visit(Input node, FunctionDefinition p) {
         for (Expression expression:node.getExpressionList()) {
-            expression.accept(addressCGVisitor, p);
+            expression.accept(addressCGVisitor, null);
             codeGenerator.in(expression.getType().suffix());
             codeGenerator.store(expression.getType().suffix());
         }
@@ -146,13 +195,13 @@ public class ExecuteCGVisitor  <TP, TR> extends AbstractErrorVisitor<TP, TR>{
      *      <Label_>END <:>
      */
     @Override
-    public TR visit(While node, TP p)
+    public Void visit(While node, FunctionDefinition p)
     {
         int condition= codeGenerator.getLabel();
         int end = codeGenerator.getLabel();
 
         codeGenerator.label(condition);
-        node.getExpression().accept(valueCGVisitor,p);
+        node.getExpression().accept(valueCGVisitor,null);
         codeGenerator.jz(end);
         for (Statement statement: node.getStatementList()) {
             statement.accept(this,p);
@@ -177,12 +226,12 @@ public class ExecuteCGVisitor  <TP, TR> extends AbstractErrorVisitor<TP, TR>{
      *      <Label_>END <:>
      */
     @Override
-    public TR visit(If node, TP p)
+    public Void visit(If node, FunctionDefinition p)
     {
         int ELSE= codeGenerator.getLabel();
         int end = codeGenerator.getLabel();
 
-        node.getExpression().accept(valueCGVisitor,p);
+        node.getExpression().accept(valueCGVisitor,null);
         codeGenerator.jz(ELSE);
         for (Statement statement: node.getStatementList()) {
             statement.accept(this,p);
@@ -197,5 +246,39 @@ public class ExecuteCGVisitor  <TP, TR> extends AbstractErrorVisitor<TP, TR>{
     }
 
 
+    /**
+     * Execute[[Procediment: Statement ->Expression1 Expression2*]]():
+     *          Value[[(Expression) Statement]]()
+     *          if(!(((expression)statement).type is void))
+     *              <pop> ((expression)statement).type.suffix
+     */
+    public Void visit(Procediment node, FunctionDefinition p)
+    {
+        node.accept(valueCGVisitor,null);
+        if (!(((Expression)node).getType() instanceof VoidType))
+            codeGenerator.pop(((Expression) node).getType().suffix());
+
+        return  null;
+    }
+
+    //TODO cambiar TP a FunctionDef
+    /**
+     * Execute[[Return: Statement -> Expression]](FunctionDefinition):
+     *          Value[[Expression]]()
+     *          <Ret> expression.type.numberOfBytes()<,>
+     *              FunctionDefinition.LocalVarBytes<,>
+     *               FunctionDefinition.type.paramBytes
+     *
+     */
+    public Void visit(Return node, FunctionDefinition p)
+    {
+        node.getExpression().accept(valueCGVisitor,null);
+        codeGenerator.ret(
+                node.getExpression().getType().getMemoryBytes(),
+                p.getLocalVarBytes(),
+                p.getType().getMemoryBytes()
+        );
+        return  null;
+    }
 
 }

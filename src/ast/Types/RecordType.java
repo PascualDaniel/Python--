@@ -39,6 +39,16 @@ public class RecordType extends AbstractType{
         return v.visit(this,p);
     }
 
+    public int getMemoryBytesForField(String field){
+        for (RecordField f: fields) {
+            if(f.getName().equals(field)){
+                return f.getOffset();
+            }
+        }
+        return 0;
+    }
+
+
     @Override
     public int getMemoryBytes() {
         int ret = 0;

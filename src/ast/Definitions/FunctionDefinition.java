@@ -11,6 +11,8 @@ public class FunctionDefinition extends  AbstractDefinition{
     private List<Definition> definitions;
     private List<Statement> statements;
 
+    private int localVarBytes;
+
     public FunctionDefinition(int line, int column, String name, Type type) {
         super(line, column, name, type);
     }
@@ -45,5 +47,15 @@ public class FunctionDefinition extends  AbstractDefinition{
     @Override
     public <TP,TR>TR accept(Visitor<TP,TR> v, TP p) {
         return v.visit(this,p);
+    }
+
+    public int getLocalVarBytes() {
+        int size = 0;
+        for(Statement s:statements){
+            if(s instanceof VarDefinition){
+                size+=((VarDefinition) s).getType().getMemoryBytes();
+            }
+        }
+        return size;
     }
 }

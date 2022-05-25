@@ -1,6 +1,5 @@
 import codegenerator.CodeGenerator;
 import codegenerator.ExecuteCGVisitor;
-import codegenerator.ExecutionCGVisitor;
 import codegenerator.OffsetVisitor;
 import parser.*;
 
@@ -8,8 +7,6 @@ import org.antlr.v4.runtime.*;
 
 import ast.Program;
 import errorhandler.EH;
-import introspector.model.IntrospectorModel;
-import introspector.view.IntrospectorTree;
 import semantic.IdentificationVisitor;
 import semantic.TypeCheckingVisitor;
 

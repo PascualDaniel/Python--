@@ -26,6 +26,11 @@ public class CodeGenerator {
         return labelCounter;
     }
 
+    public void funcDef(String name){
+        out.println(name+":"+"\t");
+        out.flush();
+    }
+
 
     public void pushBP(){
         out.println("\tpush\tbp");
@@ -91,6 +96,20 @@ public class CodeGenerator {
 
     public void halt() {
         out.println("\thalt\t");
+        out.flush();
+    }
+    public void mult(){
+        out.println("\tmult\t");
+        out.flush();
+    }
+
+    public void pop(char suffix) {
+        out.println("\tpop"+suffix+"\t");
+        out.flush();
+    }
+
+    public void ret(int memoryBytes, int localVarBytes, int memoryBytes1) {
+        out.println("\tret"+"\t"+memoryBytes+","+localVarBytes+","+memoryBytes1);
         out.flush();
     }
 }

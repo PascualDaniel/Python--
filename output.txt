@@ -1,0 +1,6 @@
+	Call Main	
+	enter	0
+	enter	1
+	enter	3
+	enter	0
+	halt	

@@ -28,6 +28,8 @@ public class ArrayAcess extends AbstractExpression{
         this.rigth = rigth;
     }
 
+
+
     @Override
     public <TP,TR>TR accept(Visitor<TP,TR> v, TP p) {
         return v.visit(this,p);
