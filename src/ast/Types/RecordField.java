@@ -52,4 +52,10 @@ public class RecordField extends AbstractType {
     public void setOffset(int offset) {
         this.offset = offset;
     }
+
+    @Override
+    public int getMemoryBytes() {
+
+        return type.getMemoryBytes();
+    }
 }

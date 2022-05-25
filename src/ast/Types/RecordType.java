@@ -59,5 +59,14 @@ public class RecordType extends AbstractType{
 
         return ret;
     }
-    
+
+    @Override
+    public String toString() {
+        String ret="RecordType{";
+        for(RecordField rf: this.fields){
+            ret += rf.getName()+",";
+        }
+        return ret +
+                '}';
+    }
 }

@@ -8,18 +8,19 @@ import ast.Types.RecordField;
 import ast.Types.RecordType;
 import visitor.AbstractVisitor;
 
-public class OffsetVisitor <TP, TR> extends AbstractVisitor<TP, TR> {
+public class OffsetVisitor  extends AbstractVisitor<FunctionDefinition, Void> {
 
     int global = 0;
     int locales = 0;
 
 
     @Override
-    public TR visit(FunctionDefinition node, TP p){
+    public Void visit(FunctionDefinition node, FunctionDefinition p){
         locales = 0;
-        node.getType().accept(this, p);
+        node.getType().accept(this, node);
         for (Definition definition:node.getDefinitions()) {
             definition.accept(this,p);
+
         }
 
 
@@ -28,7 +29,7 @@ public class OffsetVisitor <TP, TR> extends AbstractVisitor<TP, TR> {
 
 
     @Override
-    public TR visit(VarDefinition node, TP p){
+    public Void visit(VarDefinition node, FunctionDefinition p){
 
         node.getType().accept(this, p);
 
@@ -45,20 +46,21 @@ public class OffsetVisitor <TP, TR> extends AbstractVisitor<TP, TR> {
 
 
     @Override
-    public TR visit(FunctionType node, TP p){
-
+    public Void visit(FunctionType node, FunctionDefinition p){
+        node.getType().accept(this,p);
         int bites = 4;
         for(int i = node.getDefinitions().size()-1; i >= 0; i--){
-            node.getDefinitions().get(i).accept(this,p);
+           // node.getDefinitions().get(i).accept(this,p);
             node.getDefinitions().get(i).setOffset(bites);
             bites += node.getDefinitions().get(i).getType().getMemoryBytes();
         }
-        node.getType().accept(this,p);
+       // node.getType().accept(this,p);
+
         return null;
     }
 
     @Override
-    public TR visit(RecordType node, TP p){
+    public Void visit(RecordType node, FunctionDefinition p){
 
         int fieldSum = 0;
 

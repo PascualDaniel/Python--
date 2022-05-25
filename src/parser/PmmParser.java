@@ -1460,22 +1460,22 @@ public class PmmParser extends Parser {
 		public Simple_typeContext simple_type;
 		public Token id1;
 		public Token id2;
-		public Token INT_CONSTANT;
 		public TypeContext type;
-		public List<Simple_typeContext> simple_type() {
-			return getRuleContexts(Simple_typeContext.class);
+		public Token INT_CONSTANT;
+		public Simple_typeContext simple_type() {
+			return getRuleContext(Simple_typeContext.class,0);
 		}
-		public Simple_typeContext simple_type(int i) {
-			return getRuleContext(Simple_typeContext.class,i);
+		public List<TypeContext> type() {
+			return getRuleContexts(TypeContext.class);
+		}
+		public TypeContext type(int i) {
+			return getRuleContext(TypeContext.class,i);
 		}
 		public List<TerminalNode> ID() { return getTokens(PmmParser.ID); }
 		public TerminalNode ID(int i) {
 			return getToken(PmmParser.ID, i);
 		}
 		public TerminalNode INT_CONSTANT() { return getToken(PmmParser.INT_CONSTANT, 0); }
-		public TypeContext type() {
-			return getRuleContext(TypeContext.class,0);
-		}
 		public TypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1555,11 +1555,11 @@ public class PmmParser extends Parser {
 					setState(339);
 					match(T__0);
 					setState(340);
-					((TypeContext)_localctx).simple_type = simple_type();
+					((TypeContext)_localctx).type = type();
 					setState(341);
 					match(T__8);
 					for(String id: ids)
-					               fields.add(new RecordField(((TypeContext)_localctx).id1.getLine(),((TypeContext)_localctx).id1.getCharPositionInLine()+1,id,((TypeContext)_localctx).simple_type.ast)); 
+					               fields.add(new RecordField(((TypeContext)_localctx).id1.getLine(),((TypeContext)_localctx).id1.getCharPositionInLine()+1,id,((TypeContext)_localctx).type.ast)); 
 					 ids = new ArrayList<String>();
 					}
 					}
@@ -1745,7 +1745,7 @@ public class PmmParser extends Parser {
 		"\u014b\b\r\1\2\u014b\u014c\7)\2\2\u014c\u0152\b\r\1\2\u014d\u014e\7\4"+
 		"\2\2\u014e\u014f\7)\2\2\u014f\u0151\b\r\1\2\u0150\u014d\3\2\2\2\u0151"+
 		"\u0154\3\2\2\2\u0152\u0150\3\2\2\2\u0152\u0153\3\2\2\2\u0153\u0155\3\2"+
-		"\2\2\u0154\u0152\3\2\2\2\u0155\u0156\7\3\2\2\u0156\u0157\5\26\f\2\u0157"+
+		"\2\2\u0154\u0152\3\2\2\2\u0155\u0156\7\3\2\2\u0156\u0157\5\30\r\2\u0157"+
 		"\u0158\7\13\2\2\u0158\u0159\b\r\1\2\u0159\u015a\b\r\1\2\u015a\u015c\3"+
 		"\2\2\2\u015b\u014a\3\2\2\2\u015c\u015d\3\2\2\2\u015d\u015b\3\2\2\2\u015d"+
 		"\u015e\3\2\2\2\u015e\u015f\3\2\2\2\u015f\u0160\7\t\2\2\u0160\u0161\b\r"+

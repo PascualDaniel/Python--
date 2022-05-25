@@ -70,4 +70,9 @@ public class DoubleType extends AbstractType {
     public char suffix() {
         return 'f';
     }
+
+    @Override
+    public String toString() {
+        return "DoubleType";
+    }
 }

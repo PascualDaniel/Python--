@@ -39,7 +39,7 @@ public class Main {
 
 		}
 		else{
-			ast.accept(new OffsetVisitor<>(),null);
+			ast.accept(new OffsetVisitor(),null);
 			CodeGenerator cg = new CodeGenerator(args[1],args[0]);
 			ast.accept(new ExecuteCGVisitor(cg),null);
 			// * The AST is shown

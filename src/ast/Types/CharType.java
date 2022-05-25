@@ -68,4 +68,8 @@ public class CharType extends AbstractType {
         return 'b';
     }
 
+    @Override
+    public String toString() {
+        return "CharType";
+    }
 }

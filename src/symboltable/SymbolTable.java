@@ -33,9 +33,10 @@ public class SymbolTable {
 	}
 	
 	public Definition find(String id) {
-		for (Map<String,Definition> scopeTable:table) {
-			if(scopeTable.containsKey(id))
-				return scopeTable.get(id);
+		for (int i = scope; i >= 0; i--) {
+			Definition def = table.get(i).get(id);
+			if (def != null)
+				return def;
 		}
 		return null;
 	}

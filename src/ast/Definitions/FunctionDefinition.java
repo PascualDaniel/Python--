@@ -4,6 +4,8 @@ import ast.Statements.Statement;
 import ast.Types.Type;
 import visitor.Visitor;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class FunctionDefinition extends  AbstractDefinition{
@@ -11,7 +13,7 @@ public class FunctionDefinition extends  AbstractDefinition{
     private List<Definition> definitions;
     private List<Statement> statements;
 
-    private int localVarBytes;
+
 
     public FunctionDefinition(int line, int column, String name, Type type) {
         super(line, column, name, type);
@@ -20,6 +22,7 @@ public class FunctionDefinition extends  AbstractDefinition{
     public FunctionDefinition(int line, int column, String name, Type type, List<Definition> definitions, List<Statement> statements) {
         super(line, column, name, type);
         this.definitions = definitions;
+        //Collections.reverse(definitions);
         this.statements = statements;
     }
 
@@ -28,12 +31,10 @@ public class FunctionDefinition extends  AbstractDefinition{
     }
 
 
-    public List<Definition> getVarDefinitions() {
-        return definitions;
-    }
+
 
     public List<Definition> getDefinitions() {
-        return definitions;
+        return  definitions;
     }
 
     public void setDefinitions(List<Definition> definitions) {
@@ -51,10 +52,9 @@ public class FunctionDefinition extends  AbstractDefinition{
 
     public int getLocalVarBytes() {
         int size = 0;
-        for(Statement s:statements){
-            if(s instanceof VarDefinition){
-                size+=((VarDefinition) s).getType().getMemoryBytes();
-            }
+        for(Definition d:definitions){
+            size+=d.getType().getMemoryBytes();
+
         }
         return size;
     }

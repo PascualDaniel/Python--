@@ -44,7 +44,7 @@ public class AddressCGVisitor   extends AbstractErrorVisitor<Void, Void>{
 
     /**
      *
-     *   dirección[[fieldAccess:expression -> Variable:var]]()=
+     *   dirección[[fieldAccess:expression -> Variable:var ID]]()=
      *     dirección[[var]]
      *     <pushi> ID.offset
      *     <addi>
@@ -53,10 +53,15 @@ public class AddressCGVisitor   extends AbstractErrorVisitor<Void, Void>{
     @Override
     public Void visit(FieldAccess e, Void value) {
         e.getExpression().accept(this, value);
-        codeGenerator.pushBP();
-        RecordType type = (RecordType) e.getType();
-        type.getMemoryBytesForField(e.getField());
-        codeGenerator.pushI(type.getMemoryBytesForField(e.getField()));
+
+        if(  e.getExpression().getType() instanceof RecordType){
+
+            RecordType type = (RecordType) e.getExpression().getType();
+            type.getMemoryBytesForField(e.getField());
+            codeGenerator.pushI(type.getMemoryBytesForField(e.getField()));
+        }else{
+            codeGenerator.pushI(0);
+        }
         codeGenerator.addI();
         return null;
     }
@@ -70,10 +75,11 @@ public class AddressCGVisitor   extends AbstractErrorVisitor<Void, Void>{
      */
     @Override
     public Void visit(ArrayAcess e, Void value) {
-        e.getRigth().accept(valueCGVisitor, value);
-        codeGenerator.pushI(e.getType().getMemoryBytes());
-        codeGenerator.mult();
         e.getLeft().accept(this, value);
+        e.getRigth().accept(valueCGVisitor, value);
+
+        codeGenerator.pushI(e.getType().getMemoryBytes());
+        codeGenerator.mult('i');
         //todo
         codeGenerator.addI();
         return null;

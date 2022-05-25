@@ -1,6 +1,7 @@
 package ast.Types;
 
 import ast.ASTNode;
+import ast.Definitions.Definition;
 import visitor.Visitor;
 
 import java.util.List;
@@ -9,14 +10,11 @@ public class ArrayType extends AbstractType{
 
     private Type type;
     private int dimension;
-    public ArrayType(int line, int column) {
-        super(0, 0);
-    }
 
     public ArrayType( Type type, int  dimensions) {
         super(0, 0);
         this.type = type;
-        this.dimension = dimension;
+        this.dimension = dimensions;
     }
 
     public Type of() {
@@ -33,10 +31,6 @@ public class ArrayType extends AbstractType{
 
     public int getDimension() {
         return dimension;
-    }
-
-    public void setDimension(int dimension) {
-        this.dimension = dimension;
     }
 
     @Override
@@ -56,7 +50,17 @@ public class ArrayType extends AbstractType{
 
     @Override
     public int getMemoryBytes() {
-        return dimension*type.getMemoryBytes();
+        return getDimension()*type.getMemoryBytes();
     }
 
+
+
+
+    @Override
+    public String toString() {
+        return "ArrayType{" +
+                "type=" + type +
+                ", dimension=" + dimension +
+                '}';
+    }
 }

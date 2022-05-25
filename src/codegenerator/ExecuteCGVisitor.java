@@ -35,11 +35,17 @@ public class ExecuteCGVisitor  extends AbstractErrorVisitor<FunctionDefinition, 
      */
     @Override
     public Void visit(Program node, FunctionDefinition p) {
+        for (Definition def:node.getDefinitions()) {
+            if(def instanceof VarDefinition)
+                def.accept(this, p);
+            //codeGenerator.enter(def.getOffset());
+        }
         codeGenerator.main();
         codeGenerator.halt();
         for (Definition def:node.getDefinitions()) {
-            def.accept(this, null);
-            codeGenerator.enter(def.getOffset());
+            if(def instanceof FunctionDefinition)
+                def.accept(this, p);
+            //codeGenerator.enter(def.getOffset());
         }
         //codeGenerator.halt();
         return null;
@@ -51,7 +57,8 @@ public class ExecuteCGVisitor  extends AbstractErrorVisitor<FunctionDefinition, 
      */
     @Override
     public Void visit(VarDefinition node, FunctionDefinition p) {
-
+        codeGenerator.varDefComment(node);
+        System.out.println(node.getName()+" "+node.getOffset());
         return null;
     }
 
@@ -71,24 +78,30 @@ public class ExecuteCGVisitor  extends AbstractErrorVisitor<FunctionDefinition, 
      */
     @Override
     public Void visit(FunctionDefinition node, FunctionDefinition p) {
+
         codeGenerator.funcDef(node.getName());
         FunctionType type = (FunctionType) node.getType();
-        for (Definition def:type.getDefinitions()) {
-            def.accept(this,null);
+        codeGenerator.comment("Parameters");
+        for (VarDefinition def:type.getDefinitions()) {
+            def.accept(this,p);
         }
-        codeGenerator.enter(type.getMemoryBytes());
+        codeGenerator.comment("Local Variables");
+
         for (Definition def:node.getDefinitions()) {
-            def.accept(this,null);
+            def.accept(this,node);
         }
+        codeGenerator.enter(node.getLocalVarBytes());
         for (Statement st:node.getStatements()) {
-            st.accept(this,null);
+            codeGenerator.commentInfo(""+ st.getLine());
+            st.accept(this,node);
+
         }
 
-        if (!(node.getType() instanceof VoidType))
+        if (type.getType() instanceof VoidType)
             codeGenerator.ret(
                     0,
-                    p.getLocalVarBytes(),
-                    p.getType().getMemoryBytes()
+                    node.getLocalVarBytes()
+                    ,type.getParamBytes()
             );
 
 
@@ -128,6 +141,7 @@ public class ExecuteCGVisitor  extends AbstractErrorVisitor<FunctionDefinition, 
      *
      */
     public Void visit(Assigment node, FunctionDefinition p){
+        codeGenerator.comment("Assigment");
         node.getLeft().accept(addressCGVisitor,null);
         node.getRight().accept(valueCGVisitor,null);
         codeGenerator.store(node.getLeft().getType().suffix());
@@ -148,6 +162,7 @@ public class ExecuteCGVisitor  extends AbstractErrorVisitor<FunctionDefinition, 
      */
     @Override
     public Void visit(Print node, FunctionDefinition p) {
+        codeGenerator.comment("Print");
         for (Expression expression:node.getExpressionList()) {
             expression.accept(valueCGVisitor, null);
             codeGenerator.out(expression.getType().suffix());
@@ -172,6 +187,7 @@ public class ExecuteCGVisitor  extends AbstractErrorVisitor<FunctionDefinition, 
      */
     @Override
     public Void visit(Input node, FunctionDefinition p) {
+        codeGenerator.comment("input");
         for (Expression expression:node.getExpressionList()) {
             expression.accept(addressCGVisitor, null);
             codeGenerator.in(expression.getType().suffix());
@@ -197,6 +213,7 @@ public class ExecuteCGVisitor  extends AbstractErrorVisitor<FunctionDefinition, 
     @Override
     public Void visit(While node, FunctionDefinition p)
     {
+        codeGenerator.comment("While");
         int condition= codeGenerator.getLabel();
         int end = codeGenerator.getLabel();
 
@@ -228,6 +245,7 @@ public class ExecuteCGVisitor  extends AbstractErrorVisitor<FunctionDefinition, 
     @Override
     public Void visit(If node, FunctionDefinition p)
     {
+        codeGenerator.comment("If");
         int ELSE= codeGenerator.getLabel();
         int end = codeGenerator.getLabel();
 
@@ -254,6 +272,7 @@ public class ExecuteCGVisitor  extends AbstractErrorVisitor<FunctionDefinition, 
      */
     public Void visit(Procediment node, FunctionDefinition p)
     {
+        codeGenerator.comment("Procediment");
         node.accept(valueCGVisitor,null);
         if (!(((Expression)node).getType() instanceof VoidType))
             codeGenerator.pop(((Expression) node).getType().suffix());
@@ -261,7 +280,6 @@ public class ExecuteCGVisitor  extends AbstractErrorVisitor<FunctionDefinition, 
         return  null;
     }
 
-    //TODO cambiar TP a FunctionDef
     /**
      * Execute[[Return: Statement -> Expression]](FunctionDefinition):
      *          Value[[Expression]]()
@@ -272,11 +290,13 @@ public class ExecuteCGVisitor  extends AbstractErrorVisitor<FunctionDefinition, 
      */
     public Void visit(Return node, FunctionDefinition p)
     {
+        codeGenerator.comment("return");
+        FunctionType type = (FunctionType) p.getType();
         node.getExpression().accept(valueCGVisitor,null);
         codeGenerator.ret(
                 node.getExpression().getType().getMemoryBytes(),
                 p.getLocalVarBytes(),
-                p.getType().getMemoryBytes()
+                type.getParamBytes()
         );
         return  null;
     }

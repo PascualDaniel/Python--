@@ -51,7 +51,8 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
         for (Expression expression : node.getExpressions()) {
             expression.accept(this, p);
         }
-        node.getVariable().getType().parentherisis(node.getExpressions(), node);
+        node.setType(node.getVariable().getType().parentherisis(node.getExpressions(), node));
+
         return null;
     }
 

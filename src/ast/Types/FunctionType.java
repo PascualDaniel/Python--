@@ -1,6 +1,7 @@
 package ast.Types;
 
 import ast.ASTNode;
+import ast.Definitions.Definition;
 import ast.Definitions.VarDefinition;
 import ast.Expressions.Expression;
 import visitor.Visitor;
@@ -59,9 +60,30 @@ public class FunctionType extends AbstractType{
         return getType().promotesTo(other,node);
     }
 
+    @Override
+    public int getMemoryBytes() {
+        return type.getMemoryBytes();
+    }
+
+
+    public int getParamBytes() {
+        int size = 0;
+        for(Definition d:definitions){
+            size+=d.getType().getMemoryBytes();
+
+        }
+        return size;
+    }
 
     @Override
     public <TP,TR>TR accept(Visitor<TP,TR> v, TP p) {
         return v.visit(this,p);
+    }
+
+    @Override
+    public String toString() {
+        return "FunctionType{" +
+                "type=" + type.toString() +
+                '}';
     }
 }

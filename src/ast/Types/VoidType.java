@@ -18,4 +18,8 @@ public class VoidType extends AbstractType {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "VoidType";
+    }
 }

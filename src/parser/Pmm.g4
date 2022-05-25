@@ -238,9 +238,9 @@ type returns[Type ast]:
             if(ids.contains($id2.text))
                new ErrorType($id2.getLine(),$id2.getCharPositionInLine()+1,"Variable Repetida");
             ids.add($id2.text);})*
-            ':' simple_type';'
+            ':' type';'
             {for(String id: ids)
-               fields.add(new RecordField($id1.getLine(),$id1.getCharPositionInLine()+1,id,$simple_type.ast)); }
+               fields.add(new RecordField($id1.getLine(),$id1.getCharPositionInLine()+1,id,$type.ast)); }
             { ids = new ArrayList<String>();}
             )+
 
