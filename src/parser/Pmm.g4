@@ -67,7 +67,7 @@ main returns [Definition ast]:'def''main''('')'':' '{'
 //Todo esta wea
 variable_definition returns [List<Definition> ast]: {$ast = new ArrayList<Definition>();}
     {List<String> ids = new ArrayList<String>();}
-    id1=ID{ids.add($id1.text);}
+    id1=ID{ids.add($id1.text);}{$ast.add(new VarDefinition($id1.getLine(),$id1.getCharPositionInLine()+1,$id1.text,null));}
     (','id2= ID {if(ids.contains($id2.text))
                     new ErrorType($id2.getLine(),$id2.getCharPositionInLine()+1,"Variable Repetida");
                  else
@@ -76,7 +76,7 @@ variable_definition returns [List<Definition> ast]: {$ast = new ArrayList<Defini
     {$ast.add(new VarDefinition($id2.getLine(),$id2.getCharPositionInLine()+1,$id2.text,null));
       })*
 
-    ':'type';' {$ast.add(new VarDefinition($id1.getLine(),$id1.getCharPositionInLine()+1,$id1.text,null));}
+    ':'type';'
    {for(Definition d :$ast){
    d.setType($type.ast);
    }}

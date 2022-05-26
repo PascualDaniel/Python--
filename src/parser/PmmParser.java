@@ -560,15 +560,16 @@ public class PmmParser extends Parser {
 			setState(121);
 			((Variable_definitionContext)_localctx).id1 = match(ID);
 			ids.add((((Variable_definitionContext)_localctx).id1!=null?((Variable_definitionContext)_localctx).id1.getText():null));
-			setState(129);
+			_localctx.ast.add(new VarDefinition(((Variable_definitionContext)_localctx).id1.getLine(),((Variable_definitionContext)_localctx).id1.getCharPositionInLine()+1,(((Variable_definitionContext)_localctx).id1!=null?((Variable_definitionContext)_localctx).id1.getText():null),null));
+			setState(130);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__1) {
 				{
 				{
-				setState(123);
-				match(T__1);
 				setState(124);
+				match(T__1);
+				setState(125);
 				((Variable_definitionContext)_localctx).id2 = match(ID);
 				if(ids.contains((((Variable_definitionContext)_localctx).id2!=null?((Variable_definitionContext)_localctx).id2.getText():null)))
 				                    new ErrorType(((Variable_definitionContext)_localctx).id2.getLine(),((Variable_definitionContext)_localctx).id2.getCharPositionInLine()+1,"Variable Repetida");
@@ -579,17 +580,16 @@ public class PmmParser extends Parser {
 				      
 				}
 				}
-				setState(131);
+				setState(132);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(132);
-			match(T__0);
 			setState(133);
-			((Variable_definitionContext)_localctx).type = type();
+			match(T__0);
 			setState(134);
+			((Variable_definitionContext)_localctx).type = type();
+			setState(135);
 			match(T__8);
-			_localctx.ast.add(new VarDefinition(((Variable_definitionContext)_localctx).id1.getLine(),((Variable_definitionContext)_localctx).id1.getCharPositionInLine()+1,(((Variable_definitionContext)_localctx).id1!=null?((Variable_definitionContext)_localctx).id1.getText():null),null));
 			for(Definition d :_localctx.ast){
 			   d.setType(((Variable_definitionContext)_localctx).type.ast);
 			   }
@@ -1639,8 +1639,8 @@ public class PmmParser extends Parser {
 		"\4\3\4\3\4\3\4\3\4\7\4M\n\4\f\4\16\4P\13\4\3\4\3\4\3\4\3\4\7\4V\n\4\f"+
 		"\4\16\4Y\13\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\7\5"+
 		"h\n\5\f\5\16\5k\13\5\3\5\3\5\3\5\3\5\7\5q\n\5\f\5\16\5t\13\5\3\5\3\5\3"+
-		"\5\3\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\7\6\u0082\n\6\f\6\16\6\u0085\13"+
-		"\6\3\6\3\6\3\6\3\6\3\6\3\6\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7"+
+		"\5\3\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\7\6\u0083\n\6\f\6\16\6\u0086"+
+		"\13\6\3\6\3\6\3\6\3\6\3\6\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7"+
 		"\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3"+
 		"\7\3\7\3\7\3\7\5\7\u00ad\n\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3"+
 		"\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\5\7\u00c7\n\7\3"+
@@ -1674,11 +1674,11 @@ public class PmmParser extends Parser {
 		"i\b\5\1\2de\5\n\6\2ef\b\5\1\2fh\3\2\2\2gd\3\2\2\2hk\3\2\2\2ig\3\2\2\2"+
 		"ij\3\2\2\2jl\3\2\2\2ki\3\2\2\2lr\b\5\1\2mn\5\f\7\2no\b\5\1\2oq\3\2\2\2"+
 		"pm\3\2\2\2qt\3\2\2\2rp\3\2\2\2rs\3\2\2\2su\3\2\2\2tr\3\2\2\2uv\b\5\1\2"+
-		"vw\7\t\2\2wx\7\2\2\3x\t\3\2\2\2yz\b\6\1\2z{\b\6\1\2{|\7)\2\2|\u0083\b"+
-		"\6\1\2}~\7\4\2\2~\177\7)\2\2\177\u0080\b\6\1\2\u0080\u0082\b\6\1\2\u0081"+
-		"}\3\2\2\2\u0082\u0085\3\2\2\2\u0083\u0081\3\2\2\2\u0083\u0084\3\2\2\2"+
-		"\u0084\u0086\3\2\2\2\u0085\u0083\3\2\2\2\u0086\u0087\7\3\2\2\u0087\u0088"+
-		"\5\30\r\2\u0088\u0089\7\13\2\2\u0089\u008a\b\6\1\2\u008a\u008b\b\6\1\2"+
+		"vw\7\t\2\2wx\7\2\2\3x\t\3\2\2\2yz\b\6\1\2z{\b\6\1\2{|\7)\2\2|}\b\6\1\2"+
+		"}\u0084\b\6\1\2~\177\7\4\2\2\177\u0080\7)\2\2\u0080\u0081\b\6\1\2\u0081"+
+		"\u0083\b\6\1\2\u0082~\3\2\2\2\u0083\u0086\3\2\2\2\u0084\u0082\3\2\2\2"+
+		"\u0084\u0085\3\2\2\2\u0085\u0087\3\2\2\2\u0086\u0084\3\2\2\2\u0087\u0088"+
+		"\7\3\2\2\u0088\u0089\5\30\r\2\u0089\u008a\7\13\2\2\u008a\u008b\b\6\1\2"+
 		"\u008b\13\3\2\2\2\u008c\u008d\7\f\2\2\u008d\u008e\5\24\13\2\u008e\u008f"+
 		"\7\13\2\2\u008f\u0090\b\7\1\2\u0090\u00c7\3\2\2\2\u0091\u0092\7\r\2\2"+
 		"\u0092\u0093\5\24\13\2\u0093\u0094\7\13\2\2\u0094\u0095\b\7\1\2\u0095"+
@@ -1752,7 +1752,7 @@ public class PmmParser extends Parser {
 		"\1\2\u0161\u0169\3\2\2\2\u0162\u0163\7\23\2\2\u0163\u0164\7*\2\2\u0164"+
 		"\u0165\7\24\2\2\u0165\u0166\5\30\r\2\u0166\u0167\b\r\1\2\u0167\u0169\3"+
 		"\2\2\2\u0168\u0143\3\2\2\2\u0168\u0144\3\2\2\2\u0168\u0147\3\2\2\2\u0168"+
-		"\u0162\3\2\2\2\u0169\31\3\2\2\2\31!#\67@ENWir\u0083\u00ac\u00c6\u00d0"+
+		"\u0162\3\2\2\2\u0169\31\3\2\2\2\31!#\67@ENWir\u0084\u00ac\u00c6\u00d0"+
 		"\u00d8\u00ef\u0101\u012b\u012d\u0138\u0141\u0152\u015d\u0168";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());

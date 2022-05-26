@@ -47,14 +47,14 @@ public class OffsetVisitor  extends AbstractVisitor<FunctionDefinition, Void> {
 
     @Override
     public Void visit(FunctionType node, FunctionDefinition p){
-        node.getType().accept(this,p);
+       // node.getType().accept(this,p);
         int bites = 4;
         for(int i = node.getDefinitions().size()-1; i >= 0; i--){
            // node.getDefinitions().get(i).accept(this,p);
             node.getDefinitions().get(i).setOffset(bites);
             bites += node.getDefinitions().get(i).getType().getMemoryBytes();
         }
-       // node.getType().accept(this,p);
+        node.getType().accept(this,p);
 
         return null;
     }
