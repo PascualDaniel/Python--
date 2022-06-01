@@ -144,7 +144,11 @@ VARIABLE:ID;
 */
 //todas las reglas tienen que  guardar algo en un ast
 expression returns [Expression ast]:
-        ID              {$ast = new Variable($ID.getLine(),$ID.getCharPositionInLine()+1,$ID.text );}
+        TRUE='true'   {$ast = new BooleanLiteral($TRUE.getLine(),$TRUE.getCharPositionInLine()+1
+                                             ,1);}
+        |FALSE='false'   {$ast = new BooleanLiteral($FALSE.getLine(),$FALSE.getCharPositionInLine()+1
+                                                      ,0);}
+        |ID              {$ast = new Variable($ID.getLine(),$ID.getCharPositionInLine()+1,$ID.text );}
         |INT_CONSTANT   {$ast = new IntLiteral($INT_CONSTANT.getLine(),$INT_CONSTANT.getCharPositionInLine()+1
                                   ,LexerHelper.lexemeToInt($INT_CONSTANT.text ));}
         |REAL_CONSTANT  {$ast = new DoubleLiteral($REAL_CONSTANT.getLine(),$REAL_CONSTANT.getCharPositionInLine()+1
@@ -221,6 +225,7 @@ simple_type returns [Type ast]:
             'int'       {$ast = new IntType();}
             |'double'   {$ast = new DoubleType();}
             |'char'     {$ast = new CharType();}
+            |'boolean'  {$ast = new BooleanType();}
 
 ;
 
@@ -253,7 +258,9 @@ type returns[Type ast]:
 //cambiar uml de arraytype, lista de dimensioness
 //=============================================================================================
 //=============================================================================================
-
+//----------Examen Booleanos--------------------------------
+TRUE_CONSTANT: 'true';
+FALSE_CONSTANT: 'false';
 //--------Caracteres---------------------------------------------------------------------------
 fragment
 COMILLA: '\'';
@@ -276,6 +283,9 @@ DIGIT: [0-9];
 fragment
 DIGITS: DIGIT+;
 INT_CONSTANT: ([1-9]DIGIT*)|[0];
+
+
+
 //--------Reales-------------------------------------------------------------------------------
 fragment
 ELEVATED:[eE][+-]?DIGITS;

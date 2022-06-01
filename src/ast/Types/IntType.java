@@ -15,7 +15,7 @@ public class IntType extends AbstractType {
 
     @Override
     public boolean isLogical() {
-        return true;
+        return false;
     }
     @Override
     public Type arithmetic(Type other, ASTNode node) {
@@ -36,9 +36,10 @@ public class IntType extends AbstractType {
         if(other instanceof ErrorType)
             return other;
         if(other instanceof IntType)
-            return new IntType();
+            return new BooleanType();
         return super.comparason(other,node);
     }
+    /*
     @Override
     public Type logical(Type other,ASTNode node) {
         if(other instanceof IntType)
@@ -47,6 +48,8 @@ public class IntType extends AbstractType {
             return other;
         return super.logical(other,node);
     }
+    */
+
     @Override
     public Type logical(ASTNode node) {
         return this;

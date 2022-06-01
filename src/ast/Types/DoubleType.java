@@ -33,7 +33,7 @@ public class DoubleType extends AbstractType {
         if(other instanceof ErrorType)
             return other;
         if(other instanceof DoubleType)
-            return new IntType();
+            return new BooleanType();
         return super.comparason(other,node);
     }
 

@@ -2,6 +2,7 @@ package codegenerator;
 
 import ast.Expressions.*;
 import ast.Statements.Procediment;
+import ast.Types.BooleanType;
 
 public class ValueCGVisitor   extends AbstractErrorVisitor<Void, Void>{
 
@@ -71,6 +72,19 @@ public class ValueCGVisitor   extends AbstractErrorVisitor<Void, Void>{
         codeGenerator.push(node.getType().suffix(),node.getValue());
         return null;
     }
+
+    /**
+     * valor⟦literalBoolean → lexema:string⟧ =
+     *  PUSH {lexema}
+     *
+     *  //Tiene que ser 0 o 1
+     */
+    @Override
+    public Void visit(BooleanLiteral node, Void p) {
+        codeGenerator.push(node.getType().suffix(),node.getValue());
+        return null;
+    }
+
     /**
      * valor⟦literalChar → lexema:string⟧ =
      *  PUSH {lexema}
@@ -147,17 +161,17 @@ public class ValueCGVisitor   extends AbstractErrorVisitor<Void, Void>{
         node.getLeft().accept(this,p);
         node.getRigth().accept(this,p);
         if(node.getSign().equals(">"))
-            codeGenerator.gt(node.getType().suffix());
+            codeGenerator.gt(node.getLeft().getType().suffix());
         if(node.getSign().equals(">="))
-            codeGenerator.ge(node.getType().suffix());
+            codeGenerator.ge(node.getLeft().getType().suffix());
         if(node.getSign().equals("<"))
-            codeGenerator.lt(node.getType().suffix());
+            codeGenerator.lt(node.getLeft().getType().suffix());
         if(node.getSign().equals("<="))
-            codeGenerator.le(node.getType().suffix());
+            codeGenerator.le(node.getLeft().getType().suffix());
         if(node.getSign().equals("!="))
-            codeGenerator.ne(node.getType().suffix());
+            codeGenerator.ne(node.getLeft().getType().suffix());
         if(node.getSign().equals("=="))
-            codeGenerator.eq(node.getType().suffix());
+            codeGenerator.eq(node.getLeft().getType().suffix());
 
         return null;
     }

@@ -3,51 +3,58 @@ package ast.Types;
 import ast.ASTNode;
 import visitor.Visitor;
 
-public class CharType extends AbstractType {
-    public CharType() {
+public class BooleanType extends AbstractType {
+
+    public BooleanType() {
         super(0, 0);
+
+
     }
 
 
     @Override
-    public <TP,TR>TR accept(Visitor<TP,TR> v, TP p) {
-        return v.visit(this,p);
+    public boolean isLogical() {
+        return true;
     }
 
-    @Override
-    public Type arithmetic(Type other, ASTNode node) {
-        if(other instanceof CharType)
-            return other;
-        else if(other instanceof ErrorType)
-            return other;
-        return super.arithmetic(other,node);
-
-    }
-    @Override
-    public Type arithmetic( ASTNode node) {
-        return this;
-    }
+/*
     @Override
     public Type comparason(Type other, ASTNode node) {
         if(other instanceof ErrorType)
             return other;
-        if(other instanceof CharType)
+        if(other instanceof BooleanType)
             return new BooleanType();
         return super.comparason(other,node);
     }
+    */
+
+    @Override
+    public Type logical(Type other,ASTNode node) {
+        if(other instanceof BooleanType)
+            return other;
+        else if(other instanceof ErrorType)
+            return other;
+        return super.logical(other,node);
+    }
+    @Override
+    public Type logical(ASTNode node) {
+        return this;
+    }
+
     @Override
     public Type promotesTo(Type other, ASTNode node) {
-        if(other instanceof CharType)
+        if(other instanceof BooleanType)
             return other;
         else if(other instanceof ErrorType)
             return other;
         return super.promotesTo(other,node);
     }
+
     @Override
     public Type canBeCast(Type other, ASTNode node) {
         if(other instanceof ErrorType)
             return other;
-        if(other instanceof IntType ||other instanceof DoubleType || other instanceof CharType)
+        if(other instanceof BooleanType || other instanceof IntType ||other instanceof DoubleType || other instanceof CharType)
             return other;
 
         return super.canBeCast(other,node);
@@ -59,17 +66,22 @@ public class CharType extends AbstractType {
 
     @Override
     public int getMemoryBytes() {
-        return 1;
+        return 2;
     }
 
 
     @Override
     public char suffix() {
-        return 'b';
+        return 'i';
     }
 
     @Override
     public String toString() {
-        return "CharType";
+        return "BooleanType";
+    }
+
+    @Override
+    public <TP,TR>TR accept(Visitor<TP,TR> v, TP p) {
+        return v.visit(this,p);
     }
 }

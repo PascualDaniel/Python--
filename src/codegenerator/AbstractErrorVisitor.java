@@ -166,4 +166,13 @@ public abstract class AbstractErrorVisitor<TP,TR> implements Visitor<TP,TR> {
     public TR visit(Program node, TP p) {
         throw new IllegalStateException("No deberia llegar aqui");
     }
+    //Examen
+    @Override
+    public TR visit(BooleanType node, TP p) {
+        throw new IllegalStateException("No deberia llegar aqui");
+    }
+    @Override
+    public TR visit(BooleanLiteral node, TP p) {
+        throw new IllegalStateException("No deberia llegar aqui");
+    }
 }

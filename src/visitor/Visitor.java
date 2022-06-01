@@ -42,6 +42,14 @@ public interface Visitor<TP,TR> {
     public TR visit(RecordField node, TP p);
     public TR visit(RecordType node, TP p);
     public TR visit(VoidType node, TP p);
+
+    // Examen
+    public TR visit(BooleanType node, TP p);
+    public TR visit(BooleanLiteral node, TP p);
+
+
     //Program
     public TR visit(Program node, TP p);
+
+
 }

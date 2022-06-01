@@ -84,6 +84,17 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
         node.setLValue(false);
         node.setType(new DoubleType());
         return null;
+
+
+    }
+
+   //Examen
+    @Override
+    public Void visit(BooleanLiteral node, Type p) {
+        node.setLValue(false);
+        node.setType(new BooleanType());
+
+        return null;
     }
 
     @Override
@@ -228,5 +239,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
 
         return null;
     }
+
+
 
 }

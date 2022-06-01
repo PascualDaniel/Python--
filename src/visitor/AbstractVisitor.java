@@ -236,4 +236,15 @@ public abstract class AbstractVisitor<TP,TR> implements Visitor<TP,TR>{
 
         return null;
     }
+
+    @Override
+    public TR visit(BooleanType node, TP p) {
+        return null;
+    }
+    @Override
+    public TR visit(BooleanLiteral node, TP p) {
+        return null;
+    }
+
+
 }
